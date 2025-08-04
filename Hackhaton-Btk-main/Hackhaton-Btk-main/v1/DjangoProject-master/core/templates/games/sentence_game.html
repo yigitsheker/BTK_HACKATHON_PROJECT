@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sentence Master - Grammar Challenge</title>
+    <link rel="stylesheet" href="{% static 'css/sentence-game.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header class="main-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <span class="material-icons">auto_stories</span>
+                </div>
+                <div class="title-group">
+                    <h1>Sentence Master</h1>
+                    <p>Perfect Your Grammar Skills</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="level-select modern-card" id="levelSelect">
+            <div class="card-header">
+                <h2>Choose Your Challenge</h2>
+                <p>Select your grammar level to begin</p>
+            </div>
+            
+            <div class="level-options">
+                <div class="level-option" data-level="A2">
+                    <input type="radio" id="level-beginner" name="level" value="A2" checked>
+                    <label for="level-beginner">
+                        <div class="level-icon">
+                            <span class="material-icons">school</span>
+                        </div>
+                        <div class="level-info">
+                            <h3>Beginner</h3>
+                            <span>A2 Level</span>
+                            <div class="level-description">Basic sentence structure</div>
+                        </div>
+                        <div class="level-stats">
+                            <div class="stat">
+                                <span class="material-icons">quiz</span>
+                                <span>10 Questions</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="level-option" data-level="B1">
+                    <input type="radio" id="level-intermediate" name="level" value="B1">
+                    <label for="level-intermediate">
+                        <div class="level-icon">
+                            <span class="material-icons">trending_up</span>
+                        </div>
+                        <div class="level-info">
+                            <h3>Intermediate</h3>
+                            <span>B1 Level</span>
+                            <div class="level-description">Complex grammar rules</div>
+                        </div>
+                        <div class="level-stats">
+                            <div class="stat">
+                                <span class="material-icons">quiz</span>
+                                <span>10 Questions</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="level-option" data-level="B2-C1">
+                    <input type="radio" id="level-advanced" name="level" value="B2-C1">
+                    <label for="level-advanced">
+                        <div class="level-icon">
+                            <span class="material-icons">military_tech</span>
+                        </div>
+                        <div class="level-info">
+                            <h3>Advanced</h3>
+                            <span>B2-C1 Level</span>
+                            <div class="level-description">Professional grammar</div>
+                        </div>
+                        <div class="level-stats">
+                            <div class="stat">
+                                <span class="material-icons">quiz</span>
+                                <span>10 Questions</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="start-button" id="startGame">
+                <span class="material-icons">play_arrow</span>
+                Start Challenge
+            </button>
+        </div>
+
+        <section class="game-section modern-card" id="gameSection">
+            <div class="game-header">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="questionNum">1</span> / <span id="totalQuestions">10</span>
+                    </div>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat-item score-stat">
+                        <span class="material-icons">stars</span>
+                        <div class="stat-info">
+                            <span class="stat-value" id="score">0</span>
+                            <span class="stat-label">Score</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-item timer-stat">
+                        <span class="material-icons">schedule</span>
+                        <div class="stat-info">
+                            <span class="stat-value" id="time">0</span>
+                            <span class="stat-label">Time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-display-container">
+                <div class="question-card">
+                    <div class="question-label" id="questionLabel">Complete the sentence:</div>
+                    <div class="question-text" id="questionText"></div>
+                </div>
+            </div>
+
+            <div class="choices-container" id="choices"></div>
+            
+            <div class="feedback-message" id="feedback"></div>
+        </section>
+
+        <div class="game-over modern-card" id="gameOver">
+            <div class="result-header">
+                <div class="result-icon" id="resultIcon">
+                    <span class="material-icons">emoji_events</span>
+                </div>
+                <h2 id="resultTitle">Challenge Complete!</h2>
+                <div class="final-score" id="finalScore"></div>
+            </div>
+
+            <div class="performance-chart">
+                <div class="chart-item correct">
+                    <div class="chart-bar">
+                        <div class="chart-fill" id="correctBar"></div>
+                    </div>
+                    <div class="chart-label">
+                        <span class="material-icons">check_circle</span>
+                        <span>Correct</span>
+                        <span id="correctCount">0</span>
+                    </div>
+                </div>
+                
+                <div class="chart-item wrong">
+                    <div class="chart-bar">
+                        <div class="chart-fill" id="wrongBar"></div>
+                    </div>
+                    <div class="chart-label">
+                        <span class="material-icons">cancel</span>
+                        <span>Wrong</span>
+                        <span id="wrongCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wrong-summary" id="wrongSummary"></div>
+
+            <div class="action-buttons">
+                <button class="secondary-button" onclick="window.location.href='index.html'">
+                    <span class="material-icons">home</span>
+                    Home
+                </button>
+                <button class="primary-button" id="playAgain">
+                    <span class="material-icons">refresh</span>
+                    Play Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <script src="{% static 'js/sentence-game.js' %}" defer></script>
+</body>
+</html>

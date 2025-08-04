@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>VocabBlitz - Bilingual Word Match</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/vocabblitz.css' %}">
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="{% static 'js/vocablitz.js' %}" defer></script>
+</head>
+<body>
+  <!-- Background -->
+  <div class="background-animation">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header class="main-header">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <span class="material-icons">psychology</span>
+        </div>
+        <div class="title-group">
+          <h1>VocabBlitz</h1>
+          <p>Master Words at Lightning Speed</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Level Selection -->
+    <div class="level-select modern-card" id="levelSelect">
+      <div class="card-header">
+        <h2>Choose Your Challenge</h2>
+        <p>Select your skill level to begin</p>
+      </div>
+
+      <div class="level-options">
+        <div class="level-option" data-level="A1-A2">
+          <input type="radio" id="level-beginner" name="level" value="A1-A2" checked>
+          <label for="level-beginner">
+            <div class="level-icon">
+              <span class="material-icons">school</span>
+            </div>
+            <div class="level-info">
+              <h3>Beginner</h3>
+              <span>A1-A2 Level</span>
+              <div class="level-description">Basic everyday words</div>
+            </div>
+            <div class="level-stats">
+              <div class="stat">
+                <span class="material-icons">timer</span>
+                <span>7s</span>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="level-option" data-level="B1-B2">
+          <input type="radio" id="level-intermediate" name="level" value="B1-B2">
+          <label for="level-intermediate">
+            <div class="level-icon">
+              <span class="material-icons">trending_up</span>
+            </div>
+            <div class="level-info">
+              <h3>Intermediate</h3>
+              <span>B1-B2 Level</span>
+              <div class="level-description">Complex vocabulary</div>
+            </div>
+            <div class="level-stats">
+              <div class="stat">
+                <span class="material-icons">timer</span>
+                <span>5s</span>
+              </div>
+            </div>
+          </label>
+        </div>
+
+        <div class="level-option" data-level="C1-C2">
+          <input type="radio" id="level-advanced" name="level" value="C1-C2">
+          <label for="level-advanced">
+            <div class="level-icon">
+              <span class="material-icons">military_tech</span>
+            </div>
+            <div class="level-info">
+              <h3>Advanced</h3>
+              <span>C1-C2 Level</span>
+              <div class="level-description">Professional terms</div>
+            </div>
+            <div class="level-stats">
+              <div class="stat">
+                <span class="material-icons">timer</span>
+                <span>4s</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <button class="start-button" id="startGame">
+        <span class="material-icons">play_arrow</span>
+        Start Challenge
+      </button>
+    </div>
+
+    <!-- Game Section -->
+    <section class="game-section modern-card" id="gameSection">
+      <!-- Progress & Stats -->
+      <div class="game-header">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-text">
+            <span id="questionNum">1</span> / <span id="totalQuestions">10</span>
+          </div>
+        </div>
+
+        <div class="game-stats">
+          <div class="stat-item score-stat">
+            <span class="material-icons">stars</span>
+            <div class="stat-info">
+              <span class="stat-value" id="score">0</span>
+              <span class="stat-label">Score</span>
+            </div>
+          </div>
+
+          <div class="stat-item timer-stat">
+            <span class="material-icons">schedule</span>
+            <div class="stat-info">
+              <span class="stat-value" id="time">0</span>
+              <span class="stat-label">Time</span>
+            </div>
+            <div class="timer-ring" id="timerRing">
+              <svg class="timer-svg" viewBox="0 0 100 100">
+                <circle class="timer-circle-bg" cx="50" cy="50" r="45"></circle>
+                <circle class="timer-circle" cx="50" cy="50" r="45" id="timerCircle"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Word Area -->
+      <div class="word-display-container">
+        <div class="word-card">
+          <div class="word-label">Translate this word:</div>
+          <div class="word-text" id="wordDisplay"></div>
+          <div class="word-pronunciation" id="wordPronunciation"></div>
+        </div>
+      </div>
+
+      <div class="choices-container" id="choices"></div>
+      <div class="feedback-message" id="message"></div>
+    </section>
+
+    <!-- Game Over -->
+    <div class="game-over modern-card" id="gameOver">
+      <div class="result-header">
+        <div class="result-icon" id="resultIcon">
+          <span class="material-icons">emoji_events</span>
+        </div>
+        <h2 id="resultTitle">Challenge Complete!</h2>
+        <div class="final-score" id="finalScore"></div>
+      </div>
+
+      <div class="performance-chart">
+        <div class="chart-item correct">
+          <div class="chart-bar">
+            <div class="chart-fill" id="correctBar"></div>
+          </div>
+          <div class="chart-label">
+            <span class="material-icons">check_circle</span>
+            <span>Correct</span>
+            <span id="correctCount">0</span>
+          </div>
+        </div>
+
+        <div class="chart-item wrong">
+          <div class="chart-bar">
+            <div class="chart-fill" id="wrongBar"></div>
+          </div>
+          <div class="chart-label">
+            <span class="material-icons">cancel</span>
+            <span>Wrong</span>
+            <span id="wrongCount">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrong-summary" id="wrongSummary"></div>
+
+      <div class="action-buttons">
+        <a class="secondary-button" href="/"><span class="material-icons">home</span>Home</a>
+        <button class="primary-button" id="playAgain">
+          <span class="material-icons">refresh</span>
+          Play Again
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particles -->
+  <div class="floating-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+</body>
+</html>

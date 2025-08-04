@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Roleplay - İngilizce Öğrenme Platformu{% endblock %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h1 class="page-title">AI Roleplay</h1>
+        <p class="page-subtitle">Yapay zeka ile konuşma pratiği yapın ve İngilizce becerilerinizi geliştirin</p>
+    </div>
+</div>
+
+<div class="content-grid">
+    <!-- Sol Taraf - Chatbot -->
+    <div class="main-card">
+        <div class="card-header">
+            <div class="card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="card-title">AI Asistan</div>
+        </div>
+        
+        <div id="chat-container" style="height: 400px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #f8fafc;">
+            <div id="chat-messages">
+                <div style="display: flex; margin-bottom: 15px;">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                        <i class="fas fa-robot" style="color: white;"></i>
+                    </div>
+                    <div style="background: white; padding: 12px 16px; border-radius: 12px; max-width: 70%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="margin: 0; color: #1e293b;">Merhaba! Ben İngilizce öğrenmenize yardımcı olacak AI asistanınız. Hangi konuda pratik yapmak istiyorsunuz?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="message-input" placeholder="Mesajınızı yazın..." style="flex: 1; padding: 12px 16px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+            <button onclick="sendMessage()" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i>
+                Gönder
+            </button>
+        </div>
+    </div>
+
+    <!-- Sağ Taraf - Konuşma Konuları -->
+    <div class="main-card">
+        <div class="card-header">
+            <div class="card-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                <i class="fas fa-comments"></i>
+            </div>
+            <div class="card-title">Konuşma Konuları</div>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <button onclick="startConversation('günlük hayat')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-home" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">Günlük Hayat</div>
+                    <div style="font-size: 12px; color: #64748b;">Rutinler ve günlük aktiviteler</div>
+                </div>
+            </button>
+            
+            <button onclick="startConversation('seyahat')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-plane" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">Seyahat</div>
+                    <div style="font-size: 12px; color: #64748b;">Seyahat ve turizm konuları</div>
+                </div>
+            </button>
+            
+            <button onclick="startConversation('iş')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-briefcase" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">İş Hayatı</div>
+                    <div style="font-size: 12px; color: #64748b;">İş ve kariyer konuları</div>
+                </div>
+            </button>
+            
+            <button onclick="startConversation('eğitim')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-graduation-cap" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">Eğitim</div>
+                    <div style="font-size: 12px; color: #64748b;">Eğitim ve öğrenme</div>
+                </div>
+            </button>
+            
+            <button onclick="startConversation('hobi')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-heart" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">Hobiler</div>
+                    <div style="font-size: 12px; color: #64748b;">Hobiler ve ilgi alanları</div>
+                </div>
+            </button>
+            
+            <button onclick="startConversation('teknoloji')" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                <i class="fas fa-laptop" style="margin-right: 10px;"></i>
+                <div>
+                    <div style="font-weight: 600; color: #1e293b;">Teknoloji</div>
+                    <div style="font-size: 12px; color: #64748b;">Teknoloji ve dijital dünya</div>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Konuşma İstatistikleri -->
+<div style="margin-top: 40px;">
+    <h3 style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 20px;">Konuşma İstatistikleriniz</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Toplam Konuşma</div>
+                    <div class="stat-value">12</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Toplam Süre</div>
+                    <div class="stat-value">2s 30dk</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fas fa-star"></i>
+                </div>
+                <div>
+                    <div class="stat-title">Ortalama Puan</div>
+                    <div class="stat-value">8.5/10</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div>
+                    <div class="stat-title">En İyi Konuşma</div>
+                    <div class="stat-value">9.2/10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function sendMessage() {
+    const input = document.getElementById('message-input');
+    const message = input.value.trim();
+    
+    if (message) {
+        addMessage(message, 'user');
+        input.value = '';
+        
+        // AI yanıtı simülasyonu
+        setTimeout(() => {
+            const responses = [
+                "Bu konuda daha fazla bilgi verebilir misiniz?",
+                "Çok ilginç! Bu konuda ne düşünüyorsunuz?",
+                "Anladım. Bu konuda başka bir deneyiminiz var mı?",
+                "Harika! Bu konuda daha fazla pratik yapalım.",
+                "Bu konuda size yardımcı olabilirim. Hangi yönü hakkında konuşmak istiyorsunuz?"
+            ];
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            addMessage(randomResponse, 'ai');
+        }, 1000);
+    }
+}
+
+function addMessage(text, sender) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.style.display = 'flex';
+    messageDiv.style.marginBottom = '15px';
+    messageDiv.style.justifyContent = sender === 'user' ? 'flex-end' : 'flex-start';
+    
+    const iconDiv = document.createElement('div');
+    iconDiv.style.width = '40px';
+    iconDiv.style.height = '40px';
+    iconDiv.style.borderRadius = '50%';
+    iconDiv.style.display = 'flex';
+    iconDiv.style.alignItems = 'center';
+    iconDiv.style.justifyContent = 'center';
+    iconDiv.style.marginRight = '10px';
+    iconDiv.style.background = sender === 'user' ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    
+    const icon = document.createElement('i');
+    icon.className = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+    icon.style.color = 'white';
+    iconDiv.appendChild(icon);
+    
+    const textDiv = document.createElement('div');
+    textDiv.style.background = 'white';
+    textDiv.style.padding = '12px 16px';
+    textDiv.style.borderRadius = '12px';
+    textDiv.style.maxWidth = '70%';
+    textDiv.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+    
+    const textP = document.createElement('p');
+    textP.style.margin = '0';
+    textP.style.color = '#1e293b';
+    textP.textContent = text;
+    textDiv.appendChild(textP);
+    
+    if (sender === 'user') {
+        messageDiv.appendChild(textDiv);
+        messageDiv.appendChild(iconDiv);
+    } else {
+        messageDiv.appendChild(iconDiv);
+        messageDiv.appendChild(textDiv);
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    
+    // Scroll to bottom
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+function startConversation(topic) {
+    const topics = {
+        'günlük hayat': 'Günlük hayatınız hakkında konuşalım. Hangi aktiviteleri yapmayı seviyorsunuz?',
+        'seyahat': 'Seyahat etmeyi seviyor musunuz? En son nereye gittiniz?',
+        'iş': 'İş hayatınız hakkında konuşalım. Hangi sektörde çalışıyorsunuz?',
+        'eğitim': 'Eğitim geçmişiniz hakkında konuşalım. Hangi konuları öğrenmeyi seviyorsunuz?',
+        'hobi': 'Hobileriniz hakkında konuşalım. Boş zamanlarınızda ne yapmayı seviyorsunuz?',
+        'teknoloji': 'Teknoloji hakkında konuşalım. Hangi teknolojik cihazları kullanıyorsunuz?'
+    };
+    
+    addMessage(topics[topic], 'ai');
+}
+
+// Enter tuşu ile mesaj gönderme
+document.getElementById('message-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,57 @@
+[
+  {
+    "model": "core.question",
+    "pk": 1,
+    "fields": {
+      "text": "What is the plural of 'child'?",
+      "choice_a": "childs",
+      "choice_b": "children",
+      "choice_c": "childes",
+      "correct_choice": "B"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 2,
+    "fields": {
+      "text": "Which is a verb?",
+      "choice_a": "run",
+      "choice_b": "happy",
+      "choice_c": "quickly",
+      "correct_choice": "A"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 3,
+    "fields": {
+      "text": "What is the opposite of 'hot'?",
+      "choice_a": "cold",
+      "choice_b": "warm",
+      "choice_c": "dry",
+      "correct_choice": "A"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 4,
+    "fields": {
+      "text": "Choose the correct article: ___ apple.",
+      "choice_a": "A",
+      "choice_b": "An",
+      "choice_c": "The",
+      "correct_choice": "B"
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 5,
+    "fields": {
+      "text": "Which is a noun?",
+      "choice_a": "jump",
+      "choice_b": "music",
+      "choice_c": "quickly",
+      "correct_choice": "B"
+    }
+  }
+]

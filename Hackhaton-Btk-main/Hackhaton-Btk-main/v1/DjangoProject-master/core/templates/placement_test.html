@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Placement Test{% endblock %}
+
+{% block content %}
+  {% if user.is_superuser %}
+    <h2 class="mb-4">Soru Listesi (Admin)</h2>
+
+    {% for q in all_questions %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5>{{ q.text }}</h5>
+          <ul>
+            <li>A: {{ q.choice_a }}</li>
+            <li>B: {{ q.choice_b }}</li>
+            <li>C: {{ q.choice_c }}</li>
+            <li><strong>Doğru Cevap:</strong> {{ q.correct_choice }}</li>
+          </ul>
+          <a href="{% url 'edit_question' q.id %}" class="btn btn-sm btn-warning">Düzenle</a>
+          <a href="{% url 'delete_question' q.id %}" class="btn btn-sm btn-danger">Sil</a>
+        </div>
+      </div>
+    {% endfor %}
+
+    <hr>
+    <h3>Yeni Soru Ekle</h3>
+    <form method="post" action="{% url 'add_question' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-success">Ekle</button>
+    </form>
+    <hr>
+  {% endif %}
+    {% if user.is_superuser %}
+  <hr>
+  <h3>Kullanıcı Test Sonuçları</h3>
+  <table class="table table-bordered table-striped mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>Kullanıcı</th>
+        <th>Skor</th>
+        <th>Toplam</th>
+        <th>Tarih</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in results %}
+        <tr>
+          <td>{{ result.user.username }}</td>
+          <td>{{ result.score }}</td>
+          <td>{{ result.total }}</td>
+          <td>{{ result.date_taken|date:"Y-m-d H:i" }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="4">Henüz hiç test sonucu yok.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endif %}
+
+
+  {% if question %}
+    <div class="card mt-5">
+      <div class="card-body">
+        <h5 class="card-title">{{ question.text }}</h5>
+        <form method="post">
+          {% csrf_token %}
+          {% for letter, text in question.choices %}
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="answer" value="{{ letter }}" required>
+              <label class="form-check-label">{{ text }}</label>
+            </div>
+          {% endfor %}
+          <button type="submit" class="btn btn-primary mt-3">Cevapla</button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

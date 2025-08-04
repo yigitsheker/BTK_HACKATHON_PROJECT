@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Sorular{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">AI Sorular</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">AI Tarafından Oluşturulan Sorular</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-info">
+                                <h5><i class="fas fa-info-circle"></i> AI Sorular Hakkında</h5>
+                                <p>Bu bölümde yapay zeka tarafından sizin seviyenize uygun olarak oluşturulan sorular bulunmaktadır. 
+                                Sorular kelime bilgisi, dilbilgisi ve genel İngilizce becerilerinizi test eder.</p>
+                            </div>
+
+                            <div class="question-container" id="questionContainer" style="display: none;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Soru <span id="questionNumber">1</span>/10</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 id="questionText">Soru yükleniyor...</h5>
+                                        <div class="options-container mt-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answer" id="optionA" value="A">
+                                                <label class="form-check-label" for="optionA" id="optionAText">
+                                                    Seçenek A
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answer" id="optionB" value="B">
+                                                <label class="form-check-label" for="optionB" id="optionBText">
+                                                    Seçenek B
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answer" id="optionC" value="C">
+                                                <label class="form-check-label" for="optionC" id="optionCText">
+                                                    Seçenek C
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="answer" id="optionD" value="D">
+                                                <label class="form-check-label" for="optionD" id="optionDText">
+                                                    Seçenek D
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary mt-3" id="nextBtn" onclick="nextQuestion()">Sonraki Soru</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="start-container text-center">
+                                <h4>AI Sorularına Başlamak İster misiniz?</h4>
+                                <p>Bu test 10 sorudan oluşur ve yaklaşık 10-15 dakika sürer.</p>
+                                <button class="btn btn-success btn-lg" onclick="startQuiz()">
+                                    <i class="fas fa-play"></i> Teste Başla
+                                </button>
+                            </div>
+
+                            <div class="result-container" id="resultContainer" style="display: none;">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4>Test Sonucu</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5>Puanınız: <span id="finalScore">0</span>/10</h5>
+                                        <div class="progress mb-3">
+                                            <div class="progress-bar" id="scoreProgress" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <p id="resultMessage">Sonuç mesajı</p>
+                                        <button class="btn btn-primary" onclick="restartQuiz()">Tekrar Başla</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">İstatistikler</h3>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Toplam Test:</strong> <span id="totalTests">0</span></p>
+                            <p><strong>Ortalama Puan:</strong> <span id="averageScore">0</span></p>
+                            <p><strong>En Yüksek Puan:</strong> <span id="highestScore">0</span></p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Son Testler</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentTests">
+                                <p class="text-muted">Henüz test sonucu yok.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">İpuçları</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Her soruyu dikkatlice okuyun</li>
+                                <li>Zamanınızı iyi kullanın</li>
+                                <li>Bilmediğiniz soruları atlayabilirsiniz</li>
+                                <li>Sonuçlarınızı takip edin</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+let currentQuestion = 0;
+let score = 0;
+let questions = [];
+
+// Örnek sorular (gerçek uygulamada AI'dan gelecek)
+const sampleQuestions = [
+    {
+        question: "What is the correct form of the verb 'to be' in the sentence: 'She ___ a student.'?",
+        options: ["am", "is", "are", "be"],
+        correct: "B"
+    },
+    {
+        question: "Which word is a synonym for 'happy'?",
+        options: ["sad", "joyful", "angry", "tired"],
+        correct: "B"
+    },
+    {
+        question: "Choose the correct plural form: 'The ___ are flying.'",
+        options: ["bird", "birds", "birdes", "birdies"],
+        correct: "B"
+    },
+    {
+        question: "What is the past tense of 'go'?",
+        options: ["goed", "went", "gone", "going"],
+        correct: "B"
+    },
+    {
+        question: "Which sentence is grammatically correct?",
+        options: ["I have been to Paris last year.", "I went to Paris last year.", "I am going to Paris last year.", "I will go to Paris last year."],
+        correct: "B"
+    },
+    {
+        question: "What does 'ubiquitous' mean?",
+        options: ["rare", "present everywhere", "dangerous", "beautiful"],
+        correct: "B"
+    },
+    {
+        question: "Choose the correct article: '___ apple a day keeps the doctor away.'",
+        options: ["A", "An", "The", "No article"],
+        correct: "B"
+    },
+    {
+        question: "What is the comparative form of 'good'?",
+        options: ["gooder", "more good", "better", "best"],
+        correct: "C"
+    },
+    {
+        question: "Which word is an antonym of 'generous'?",
+        options: ["kind", "selfish", "friendly", "helpful"],
+        correct: "B"
+    },
+    {
+        question: "Complete the sentence: 'If I ___ rich, I would travel the world.'",
+        options: ["am", "was", "were", "will be"],
+        correct: "C"
+    }
+];
+
+function startQuiz() {
+    questions = [...sampleQuestions];
+    currentQuestion = 0;
+    score = 0;
+    
+    document.querySelector('.start-container').style.display = 'none';
+    document.getElementById('questionContainer').style.display = 'block';
+    document.getElementById('resultContainer').style.display = 'none';
+    
+    showQuestion();
+}
+
+function showQuestion() {
+    if (currentQuestion >= questions.length) {
+        showResult();
+        return;
+    }
+    
+    const question = questions[currentQuestion];
+    document.getElementById('questionNumber').textContent = currentQuestion + 1;
+    document.getElementById('questionText').textContent = question.question;
+    document.getElementById('optionAText').textContent = question.options[0];
+    document.getElementById('optionBText').textContent = question.options[1];
+    document.getElementById('optionCText').textContent = question.options[2];
+    document.getElementById('optionDText').textContent = question.options[3];
+    
+    // Reset radio buttons
+    document.querySelectorAll('input[name="answer"]').forEach(radio => {
+        radio.checked = false;
+    });
+}
+
+function nextQuestion() {
+    const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+    if (!selectedAnswer) {
+        alert('Lütfen bir seçenek seçin!');
+        return;
+    }
+    
+    const question = questions[currentQuestion];
+    if (selectedAnswer.value === question.correct) {
+        score++;
+    }
+    
+    currentQuestion++;
+    showQuestion();
+}
+
+function showResult() {
+    document.getElementById('questionContainer').style.display = 'none';
+    document.getElementById('resultContainer').style.display = 'block';
+    
+    document.getElementById('finalScore').textContent = score;
+    const percentage = (score / questions.length) * 100;
+    document.getElementById('scoreProgress').style.width = percentage + '%';
+    
+    let message = '';
+    if (percentage >= 90) {
+        message = 'Mükemmel! Çok iyi bir sonuç elde ettiniz.';
+    } else if (percentage >= 70) {
+        message = 'İyi! Biraz daha çalışarak daha iyi sonuçlar alabilirsiniz.';
+    } else if (percentage >= 50) {
+        message = 'Orta seviye. Daha fazla pratik yapmanız gerekiyor.';
+    } else {
+        message = 'Daha fazla çalışmanız gerekiyor. İngilizce becerilerinizi geliştirmeye devam edin.';
+    }
+    document.getElementById('resultMessage').textContent = message;
+    
+    // Sonucu kaydet
+    saveResult(score, questions.length);
+}
+
+function restartQuiz() {
+    document.getElementById('resultContainer').style.display = 'none';
+    document.querySelector('.start-container').style.display = 'block';
+}
+
+function saveResult(score, total) {
+    // AJAX ile sonucu kaydet
+    fetch('{% url "save_game_result" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken()
+        },
+        body: JSON.stringify({
+            game_type: 'ai_questions',
+            score: score,
+            xp_gained: score * 10
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Sonuç kaydedildi');
+        }
+    })
+    .catch(error => {
+        console.error('Hata:', error);
+    });
+}
+
+// Sayfa yüklendiğinde istatistikleri güncelle
+document.addEventListener('DOMContentLoaded', function() {
+    // Burada gerçek veriler API'den alınabilir
+    document.getElementById('totalTests').textContent = '5';
+    document.getElementById('averageScore').textContent = '7.2';
+    document.getElementById('highestScore').textContent = '9';
+});
+</script>
+{% endblock %} 
